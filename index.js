@@ -4,16 +4,9 @@
 // script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
 // document.getElementsByTagName('head')[0].appendChild(script);
 
-// function fade_in_barcode() {
-	// $('barcode').fadeIn()
-// }
-
-// var script = document.createElement('script');
-// script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
-// document.getElementsByTagName('head')[0].appendChild(script);
-
 const backgroundColor = "#B9B9B9";
-const alphanumeric =  'abcdefghijklmnopqrstuvwxyz0123456789';
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
+const allowedCharacters =  '0123456789' + alphabet + alphabet.toUpperCase();
 const minimumDelay = 300; // ms between keystrokes
 var lastKeystrokeTime = new Date().getTime();
 var keystrokeChunk = '';
@@ -23,14 +16,14 @@ $("body").css("background-color", backgroundColor);
 document.onkeypress = function (e) {
 	// detects keypresses, when a burst of 6 keystrokes are detected with minimal delay followed by "enter"
     e = e || window.event;
-	if (e.key && alphanumeric.includes(e.key)){
-		console.log('this is alphanumeric: ' + e.key);
+	if (e.key && allowedCharacters.includes(e.key)){
+		console.log('this is allowed: ' + e.key);
 		let currentKeystrokeTime = new Date().getTime();
 		let deltaTime = currentKeystrokeTime - lastKeystrokeTime;
 		let keycode = e.key;
 		if (deltaTime < minimumDelay) {
 			keystrokeChunk += e.key;
-		console.log(`Keystroke chunk: ${keystrokeChunk}`);
+			console.log(`Keystroke chunk: ${keystrokeChunk}`);
 		}
 		else {
 			keystrokeChunk = e.key;
@@ -85,7 +78,7 @@ async function scan(upc) {
 								fontSize:20,
 								lineColor: "#0f2edb",
 								background: backgroundColor});
-	$("#barcode").fadeIn(fadeSpeed);
+	$("#barcode").slideDown(fadeSpeed);
 }
 
 var repeat = function(){
