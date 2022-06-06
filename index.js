@@ -1,9 +1,3 @@
-// const barcode = document.getElementById("barcode");
-
-// let script = document.createElement('script');
-// script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
-// document.getElementsByTagName('head')[0].appendChild(script);
-
 const backgroundColor = "#B9B9B9";
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const allowedCharacters =  '0123456789' + alphabet + alphabet.toUpperCase();
