@@ -8,8 +8,8 @@ Scattered ideas:
 */
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const allowedCharacters =  '0123456789' + alphabet + alphabet.toUpperCase();
-const minimumDelay = 300; // ms between keystrokes
-const minimumCharacters = 3; // this is the minimum length for a barcode scan (to prevent misfires)
+const minimumDelay = 60; // ms between keystrokes
+const minimumCharacters = 4; // this is the minimum length for a barcode scan (to prevent misfires)
 var lastKeystrokeTime = new Date().getTime();
 var keystrokeChunk = '';
 var locations = ["stamps", "cell 1", "cell 2", "shipping"];
@@ -24,15 +24,33 @@ else {
 	pageViews = '1';
 	localStorage.setItem('pageViews', pageViews);
 }
-console.log(`Page views: ${pageViews}`)
-$("#page-views").html(`<u>Views:</u> <b>${pageViews}</b> <i>(test of localStorage)</i>`);
+console.log(`Page views: ${pageViews}`);
+$("#page-views").html(`<u>Views</u>: <b>${pageViews}</b> <i>(test of localStorage)</i>`);
 
 // change the background color so that it matches the background of the barcode
 const backgroundColor = "#B9B9B9";
 $("body").css("background-color", backgroundColor);
 
+// initialize location buttons (TODO: high priority)
+for (i = 0; i < locations.length; i++){
+	if ((i + 1) % 3 == 0){
+		console.log("new row");
+	}
+}
+
+// change the scan location
+var scanLocation = localStorage.getItem("scanLocation");
+if (scanLocation) {
+	$("#scan-location").html(`Currently scanning to <b>${scanLocation}</b>`);
+}
+else {
+	console.log("Please select location");
+	$("#scan-location").html("Please select a location to scan to.");
+}
+
 document.onkeypress = function (e) {
-	// when a burst of 3 or more keystrokes are detected with minimal delay followed by "enter", treat it as a scan
+	// when a burst of [minimumCharacters] or more keystrokes are detected with minimal delay followed by "enter",
+	// treat it as a scan
     e = e || window.event;
 	if (e.key && allowedCharacters.includes(e.key)){
 		console.log('this is allowed: ' + e.key);
@@ -81,10 +99,11 @@ function choice(choices) {
 
 var visible = false;
 var firstScan = true;
-$("#barcode").hide()
+// $("#barcode").hide()
 const fadeSpeed = 500; // ms
 async function scan(upc) {
 	// makes the upc appear until the next one gets scanned
+	// TODO: fix shenanigans where the first scan pops in instead of a slideDown (priority: low)
 	if (firstScan){
 		JsBarcode("#barcode", upc,{	displayValue:true,
 							fontSize:20,
